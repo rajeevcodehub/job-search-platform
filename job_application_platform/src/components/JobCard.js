@@ -77,9 +77,9 @@ const JobCard = (props) => {
       </div>
       <div>
         <p>Minimum Experience</p>
-        <p>{minExp} years</p>
+        <p>{minExp??0} years</p>
         <p>Maximum Experience</p>
-        <p>{maxExp} years</p>
+        <p>{maxExp??0} years</p>
       </div>
       <div>
         <div>

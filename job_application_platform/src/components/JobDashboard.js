@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import JobCard from "./JobCard";
+import JobFilter from "./JobFilter";
 const JobDashboard = () => {
   const [jobs, setJobs] = useState([]);
-  const [uniqueJobRole, setUniqueJobRole] = useState([]);
+  
+  const [filterdJobs, setFilteredJobs] = useState([]);
 
   useEffect(() => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const body = JSON.stringify({
-      limit: 100,
+      limit: 10,
       offset: 0,
     });
 
@@ -26,83 +28,39 @@ const JobDashboard = () => {
       .then((response) => response.json())
       .then((result) => {
         setJobs(result?.jdList);
-        getUniqueJobRole(result?.jdList);
+        // getUniqueJobRole(result?.jdList);
+        setFilteredJobs(result?.jdList);
       })
       .catch((error) => console.error(error));
   }, []);
 
-  function getUniqueJobRole(jobs) {
-    const uniqueJobRole = [];
-    jobs?.forEach((job) => {
-      if (!uniqueJobRole.includes(job?.jobRole)) {
-        uniqueJobRole.push(job?.jobRole);
-      }
-    });
-    setUniqueJobRole(uniqueJobRole);
-  }
+  const handleFilter = (filters) => {
+    let filteredData = [...jobs];
+    if (filters.role) {
+      filteredData = filteredData.filter((job) => job.jobRole === filters.role);
+    }
+    if (filters.numberOfEmployees) {
+      filteredData = filteredData.filter((job) => job?.numberOfEmployees === filters.numberOfEmployees);
+    }
+    if (filters.experience) {
+      filteredData = filteredData.filter((job) => job.minExp >= filters.experience);
+    }
+    if (filters.jobType) {
+      filteredData = filteredData.filter((job) => job.jobType === filters.jobType);
+    }
+    if (filters.minimumBasePaySalary) {
+      filteredData = filteredData.filter((job) => job.minJdSalary >= filters.minimumBasePaySalary);
+    }
+    if (filters.companyName) {
+      filteredData = filteredData.filter((job) => job.companyName.toLowerCase().includes(filters.companyName.toLowerCase()));
+    }
+
+    setFilteredJobs(filteredData);
+  };
 
   return (
     <div>
-      <div style={{ display: "flex", gap: "1%", margin: "1%" }}>
-        <select style={{ width: "13%" }}>
-          <option selected="true" disabled="true">
-            Role
-          </option>
-          {uniqueJobRole?.map((role) => {
-            return <option value={role}>{role}</option>;
-          })}
-        </select>
-        <select style={{ width: "13%" }}>
-          <option selected="true" disabled="true">
-            Number of Employees
-          </option>
-          <option value="1-20">1-20</option>
-          <option value="21-50">21-50</option>
-          <option value="51-100">51-100</option>
-          <option value="101-500">101-500</option>
-          <option value="501-1000">501-1000</option>
-          <option value="More Than 1000">More Than 1000</option>
-        </select>
-
-        <select style={{ width: "13%" }}>
-          <option selected="true" disabled="true">
-            Years Of Experience
-          </option>
-          <option value="0-1 years">0-1 years</option>
-          <option value="1-3 years">1-3 years</option>
-          <option value="3-5 years">3-5 years</option>
-          <option value="5-10 years">5-10 years</option>
-          <option value="10+ years">10+ years</option>
-        </select>
-
-        <select style={{ width: "13%" }}>
-          <option selected="true" disabled="true">
-            Type of Job
-          </option>
-          <option value="Remote">Remote</option>
-          <option value="Hybrid">Hybrid</option>
-          <option value="On-site">On-site</option>
-        </select>
-
-        <select style={{ width: "13%" }}>
-          <option selected="true" disabled="true">
-            Minimum Base pay salary
-          </option>
-          <option value="0-10">Less than $10</option>
-          <option value="11-20">$11 - $20</option>
-          <option value="21-50">$21 - $50</option>
-          <option value="51-100">$51 - $100</option>
-          <option value="101-500">$101 - $500</option>
-          <option value="501-1000">$501 - $1000</option>
-          <option value="1000+">$1,000+</option>
-        </select>
-
-        <input
-          style={{ width: "13%" }}
-          type="text"
-          placeholder="Search Company Name"
-        />
-      </div>
+      <JobFilter jobs = {jobs} onFilter={handleFilter}/>
       <div
         style={{
           display: "flex",
@@ -112,7 +70,7 @@ const JobDashboard = () => {
           boxShadow: "2% 2%",
         }}
       >
-        {jobs.map((job) => {
+        {filterdJobs.length > 0 ? filterdJobs?.map((job) => {
           return (
             <div
               style={{
@@ -123,7 +81,7 @@ const JobDashboard = () => {
               <JobCard key={job?.jdUid} job={job} />
             </div>
           );
-        })}
+        }): <h1>No Jobs Found</h1>}
       </div>
     </div>
   );
