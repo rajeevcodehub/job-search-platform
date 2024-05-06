@@ -3,10 +3,9 @@ import JobCard from "./JobCard";
 import JobFilter from "./JobFilter";
 const JobDashboard = () => {
   const [jobs, setJobs] = useState([]);
-  
   const [filterdJobs, setFilteredJobs] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => {          // Fetching data from API
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -28,13 +27,12 @@ const JobDashboard = () => {
       .then((response) => response.json())
       .then((result) => {
         setJobs(result?.jdList);
-        // getUniqueJobRole(result?.jdList);
         setFilteredJobs(result?.jdList);
       })
       .catch((error) => console.error(error));
   }, []);
 
-  const handleFilter = (filters) => {
+  const handleFilter = (filters) => { // Filtering data based on filters
     let filteredData = [...jobs];
     if (filters.role) {
       filteredData = filteredData.filter((job) => job.jobRole === filters.role);
@@ -60,7 +58,7 @@ const JobDashboard = () => {
 
   return (
     <div>
-      <JobFilter jobs = {jobs} onFilter={handleFilter}/>
+      <JobFilter jobs = {jobs} onFilter={handleFilter}/>     {/* handling filter data */}
       <div
         style={{
           display: "flex",
@@ -78,10 +76,10 @@ const JobDashboard = () => {
                 borderRadius: "5px",
               }}
             >
-              <JobCard key={job?.jdUid} job={job} />
+              <JobCard key={job?.jdUid} job={job} />       {/* Display job Card */}
             </div>
           );
-        }): <h1>No Jobs Found</h1>}
+        }): <h1>No Jobs Found</h1>}  {/* Display if no jobs found */}
       </div>
     </div>
   );
