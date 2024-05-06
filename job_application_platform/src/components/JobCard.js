@@ -17,21 +17,21 @@ const JobCard = (props) => {
     jobRole,
     companyName,
     logoUrl,
-  } = props?.job;
+  } = props?.job;    // Destructuring the props
 
   const [showFullJobDescription, setShowFullJobDescription] = useState(false);
 
   const toggleDetails = () => {
-    setShowFullJobDescription(!showFullJobDescription);
+    setShowFullJobDescription(!showFullJobDescription);  // Toggling the visibility of job description
   };
 
   return (
-    <div style={{ boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)", padding: "10px" }}>
+    <div className="job-card">
       <div style={{ display: "flex", gap: "3%" }}>
         <img
           src={logoUrl}
           alt="Company Logo"
-          style={{ width: "50px", height: "50px" }}
+          className="company-logo"
         />
         <div style={{ marginTop: "-18px" }}>
           <p>{companyName}</p>
@@ -53,13 +53,14 @@ const JobCard = (props) => {
             display: "flex",
             wordWrap: "break-word",
             height: showFullJobDescription ? "auto" : "80px", // Adjust height based on visibility
-            transition: "height 0.1s ease", // Smooth transition for height change
+            transition: "height 0.1s ease",
           }}
         >
           {jobDetailsFromCompany}
         </p>
         {jobDetailsFromCompany.length > 100 && (
           <Button
+            className="view-job-description-button"
             style={{
               position: "absolute",
               bottom: -10,
@@ -83,7 +84,7 @@ const JobCard = (props) => {
       </div>
       <div>
         <div>
-          <CustomButton
+          <CustomButton        // Custom Button Component
             backgroundColor="#40E0D0"
             color="#000000"
             text="⚡ Easy Apply"

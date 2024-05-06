@@ -11,7 +11,7 @@ const JobFilter = ({ jobs, onFilter }) => {
         minimumBasePaySalary: "",
         companyName: "",
       });
-  function getUniqueJobRole(jobs) {
+  function getUniqueJobRole(jobs) {   // Getting unique job roles to display in dropdown
     const uniqueJobRole = [];
     jobs?.forEach((job) => {
       if (!uniqueJobRole.includes(job?.jobRole)) {
@@ -21,14 +21,14 @@ const JobFilter = ({ jobs, onFilter }) => {
     return uniqueJobRole;
   }
 
-  useEffect(() => {
+  useEffect(() => {    // Calling onFilter function on filter change
     onFilter(filters);
   }, [filters, onFilter]);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e) => {      // Handling filter change
     let { name, value } = e.target;
     console.log(name, value);
-    if(name === "experience" ) {
+    if(name === "experience" ) {    //  Mapping experience to integer
         if(value === "0-1 years") {
             value = 0;
         } else if(value === "1-3 years") {
@@ -42,7 +42,7 @@ const JobFilter = ({ jobs, onFilter }) => {
         }
     }
 
-    if(name === "minimumBasePaySalary") {
+    if(name === "minimumBasePaySalary") {   // Mapping minimumBasePaySalary to integer
         if(value === "0-10") {
             value = 0;
         } else if(value === "11-100") {
@@ -56,7 +56,7 @@ const JobFilter = ({ jobs, onFilter }) => {
         }
     }
 
-    if(name === "numberOfEmployees") {
+    if(name === "numberOfEmployees") {  // Mapping numberOfEmployees to string
         if(value === "1-20") {
             value = "1-20";
         } else if(value === "21-50") {
